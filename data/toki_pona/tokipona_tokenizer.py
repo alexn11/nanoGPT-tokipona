@@ -53,13 +53,14 @@ def check_if_token_is_letter(token_id):
 #
 
 def check_if_is_end_type_punctuation(character):
-    return character in ',;:.!?>)]}'
+    return character in ',;:.!?>)]}%'
 
 def check_if_start_type_punctuation(character):
     return character in '([{<'
 
 def normalise_characters(document: str) -> str:
     normalised_document = unidecode(document).lower()
+    normalised_document = normalised_document.replace('\x03', '')
     #normalised_document = re.sub(r'[„“]','"', normalised_document)
     #normalised_document = normalised_document.replace('–', '-')
     #normalised_document = normalised_document.replace('ß', 'ss')
