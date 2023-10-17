@@ -16,10 +16,14 @@ with open(input_file_path, 'r') as f:
 
 print(f"length of dataset in documents: {len(data):,}")
 
-# HERE 🤗️
 
-from tokipona_tokenizer import tokenize_document, check_if_token_is_nimi
-tokenized_documents = [ tokenize_document(doc.strip())[0] for doc in data ]
+from tokipona.tokipona_tokenizer import tokenize_document, check_if_token_is_nimi
+
+characters_to_remove = '"\'*\u200e' # strict cleanup
+tokenized_documents = [
+                        tokenize_document(doc.strip(), characters_to_remove=characters_to_remove)[0]
+                        for doc in data
+                      ]
 # drop documents that don't contain pure toki pona tokens
 tokenized_documents = [
                         doc
