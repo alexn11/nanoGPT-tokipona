@@ -1,0 +1,3 @@
+[submodule "tokipona"]
+	path = tokipona
+	url = https://github.com/alexn11/tokipona-synthetic-transformer
