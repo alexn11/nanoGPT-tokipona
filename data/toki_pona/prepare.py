@@ -32,14 +32,14 @@ tokenized_documents = [
                         for doc in tokenized_documents
                         if(any([ check_if_token_is_nimi(t) for t in doc ]))
                       ]
-print(f'nb documents after filtering: {len(tokenized_documents)}')
+print(f'nb documents after filtering: {len(tokenized_documents):,}')
 
 tokenized_data = [ token for doc in tokenized_documents for token in doc ]
 
 
 # create the train and test splits
 n = len(tokenized_data)
-print(f'total nb tokens: {n}')
+print(f'total nb tokens: {n:,}')
 train_data = tokenized_data[:int(n*0.9)]
 val_data = tokenized_data[int(n*0.9):]
 
