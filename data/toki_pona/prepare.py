@@ -18,9 +18,16 @@ print(f"length of dataset in documents: {len(data):,}")
 
 # HERE 🤗️
 
-from tokipona_tokenizer import tokenize_document
+from tokipona_tokenizer import tokenize_document, check_if_token_is_nimi
 tokenized_documents = [ tokenize_document(doc.strip())[0] for doc in data ]
-tokenized_data = [ token  for doc in tokenized_documents for token in doc ]
+# drop documents that don't contain pure toki pona tokens
+tokenized_documents = [
+                        doc
+                        for doc in tokenized_documents
+                        if(any([ check_if_token_is_nimi(t) for t in doc ]))
+                      ]
+tokenized_data = [ token for doc in tokenized_documents for token in doc ]
+
 
 # create the train and test splits
 n = len(tokenized_data)
