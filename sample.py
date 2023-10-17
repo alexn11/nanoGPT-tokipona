@@ -70,8 +70,8 @@ if load_meta:
         decode = lambda l: ''.join([itos[i] for i in l])
     else: # assume this is the toki pona tokenizer (HACK)
         import sys
-        sys.path.append('data/toki_pona')
-        from data.toki_pona.tokipona_tokenizer import tokenize_document, decode_document
+        sys.path.append('.')
+        from tokipona.tokipona_tokenizer import tokenize_document, decode_document
         encode = lambda s: tokenize_document(s)[0]
         decode = lambda l: decode_document(l)
 else:
