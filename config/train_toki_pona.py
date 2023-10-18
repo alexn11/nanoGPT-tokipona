@@ -38,9 +38,9 @@ warmup_iters = 100 # not super necessary potentially
 # compile = False # do not torch compile the model
 
 # experiment on larger model
-n_head = 12
-n_layer = 12
-n_embd = 768
+n_head = 8
+n_layer = 8
+n_embd = 512
 out_dir = 'out-toki-pona-md'
 # 10.27 start
 # end
