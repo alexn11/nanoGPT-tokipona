@@ -38,20 +38,27 @@ tokenized_data = [ token for doc in tokenized_documents for token in doc ]
 
 
 # create the train and test splits
-n = len(tokenized_data)
-print(f'total nb tokens: {n:,}')
-train_data = tokenized_data[:int(n*0.9)]
-val_data = tokenized_data[int(n*0.9):]
+nb_total_tokens = len(tokenized_data)
+print(f'total nb tokens: {nb_total_tokens:,}')
+train_size = round(0.85 * nb_total_tokens)
+val_size = round(0.1 * nb_total_tokens)
+test_size = nb_total_tokens - train_size - val_size
+train_data = tokenized_data[:train_size]
+val_data = tokenized_data[train_size:train_size + val_size]
+test_data = tokenized_data[-test_size:]
 
 # encode both to integers
-print(f"train has {len(train_data):,} tokens")
-print(f"val has {len(val_data):,} tokens")
+print(f"train data has {len(train_data):,} tokens")
+print(f"val data has {len(val_data):,} tokens")
+print(f'test data has {len(test_data):,} tokens')
 
 # export to bin files
 train_ids = np.array(train_data, dtype=np.uint16)
 val_ids = np.array(val_data, dtype=np.uint16)
+test_ids = np.array(test_data, dtype=np.uint16)
 train_ids.tofile(os.path.join(os.path.dirname(__file__), 'train.bin'))
 val_ids.tofile(os.path.join(os.path.dirname(__file__), 'val.bin'))
+test_ids.tofile(os.path.join(os.path.dirname(__file__), 'test.bin'))
 
 # save the meta information as well, to help us encode/decode later
 meta = {
