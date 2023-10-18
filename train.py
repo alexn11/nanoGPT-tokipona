@@ -16,11 +16,12 @@ $ torchrun --nproc_per_node=8 --nnodes=2 --node_rank=1 --master_addr=123.456.123
 (If your cluster does not have Infiniband interconnect prepend NCCL_IB_DISABLE=1)
 """
 
-import os
-import time
-import math
-import pickle
 from contextlib import nullcontext
+import json
+import math
+import os
+import pickle
+import time
 
 import numpy as np
 import torch
@@ -249,6 +250,13 @@ t0 = time.time()
 local_iter_num = 0 # number of iterations in the lifetime of this process
 raw_model = model.module if ddp else model # unwrap DDP container if needed
 running_mfu = -1.0
+
+#train_iter_i = [] #✴️🤷️🥝️
+iter_lr = [] #🥝️
+train_losses = [] # 🥝️
+eval_losses = [] # 🥝️
+loggings = [] # 🥝️
+
 while True:
 
     # determine and set the learning rate for this iteration
@@ -256,18 +264,22 @@ while True:
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
+    iter_lr.append((iter_num, lr)) # 🥝️
+
     # evaluate the loss on train/val sets and write checkpoints
     if iter_num % eval_interval == 0 and master_process:
         losses = estimate_loss()
         print(f"step {iter_num}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
-        if wandb_log:
-            wandb.log({
+        logging_data = {
                 "iter": iter_num,
-                "train/loss": losses['train'],
-                "val/loss": losses['val'],
+                "train/loss": losses['train'].item(),
+                "val/loss": losses['val'].item(),
                 "lr": lr,
                 "mfu": running_mfu*100, # convert to percentage
-            })
+        } # 🥝️
+        loggings.append(logging_data) # 🥝️
+        if wandb_log:
+            wandb.log(logging_data) # 🥝️
         if losses['val'] < best_val_loss or always_save_checkpoint:
             best_val_loss = losses['val']
             if iter_num > 0:
@@ -328,6 +340,9 @@ while True:
     # termination conditions
     if iter_num > max_iters:
         break
+
+with open(os.path.join(out_dir, 'loggings.json'), 'w') as metrics_file: # 🥝️
+    json.dump(loggings, metrics_file) # 🥝️
 
 if ddp:
     destroy_process_group()
