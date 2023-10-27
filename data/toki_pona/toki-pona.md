@@ -8,3 +8,15 @@
 `python train.py config/train_toki_pona.py`
 - generate some random texts:
 `python sample.py --out_dir=out-toki-pona`
+
+
+# tracking
+
+start mlflow server, prepare the data, then
+```
+cd mlflow
+python prepare_data_for_training.py
+python train_and_track.py
+```
+
+

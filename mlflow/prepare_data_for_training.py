@@ -29,6 +29,16 @@ tracker.log_params({
     'data_prep_sources': data_prep_sources,
 })
 
+artifact_paths = [
+    os.path.join(data_prep_folder_rel, artifact)
+    for artifact in [ 'meta.pkl', 'train.bin', 'val.bin', 'test.bin' ]
+]
+
+for artifact_path in artifact_paths:
+    if(os.path.exists(artifact_path)):
+        os.remove(artifact_path)
+
+
 command_line = [
     'python',
     os.path.join(data_prep_folder, 'prepare.py'),
@@ -39,5 +49,6 @@ tracker.log_params({
     'process_return_code': command_outcome,
 })
 if(command_outcome == 0):
-    for artifact in [ 'meta.pkl', 'train.bin', 'val.bin', 'test.bin' ]:
-        tracker.log_artifact(os.path.join(data_prep_folder_rel, artifact))
+    for artifact_path in artifact_paths:
+        if(os.path.exists(artifact_path)):
+            tracker.log_artifact(artifact_path)
